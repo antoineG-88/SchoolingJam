@@ -103,7 +103,7 @@ TrailRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -124,7 +124,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.4
+  m_Time: 0.2
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.3
@@ -235,10 +235,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 920a0c9cb1a4c164eb263bb3303061dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseAccelerationForce: 10
+  baseAccelerationForce: 3
   maxSpeed: 5
-  school: {fileID: 0}
+  directingBaseForce: 3
+  separationBaseForce: 20
+  separationForcePower: 1.5
+  separationAwarenessDistance: 1.5
+  cohesionBaseForce: 10
+  cohesionAwarenessDistance: 5
+  alignmentBaseForce: 5
+  alignmentAwarenessDistance: 2
   display: {fileID: 1354814300711289645}
+  schoolHandler: {fileID: 0}
+  currentDirection: {x: 0, y: 0}
 --- !u!50 &7742567387032037363
 Rigidbody2D:
   serializedVersion: 4
