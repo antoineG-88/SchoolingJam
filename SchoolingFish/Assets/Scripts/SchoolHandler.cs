@@ -6,12 +6,17 @@ public class SchoolHandler : MonoBehaviour
 {
     public int startNumberOfFish;
 
+    public Camera mainCamera;
     public FishBehaviour fishPrefab;
     [HideInInspector]
     public List<FishBehaviour> school;
 
+    [HideInInspector]
     public Vector2 directingTarget;
+    [HideInInspector]
     public bool isDirecting;
+
+    private Vector2 schoolCenter;
     private void Start()
     {
         school = new List<FishBehaviour>();
@@ -30,7 +35,8 @@ public class SchoolHandler : MonoBehaviour
 
     private void Update()
     {
-        //UpdateDirectingForce();
+        UpdateDirectingForce();
+        //UpdateCameraPosition();
     }
 
     private void UpdateDirectingForce()
@@ -44,5 +50,18 @@ public class SchoolHandler : MonoBehaviour
         {
             isDirecting = false;
         }
+    }
+
+    private void UpdateCameraPosition()
+    {
+        schoolCenter = Vector2.zero;
+        for (int i = 0; i < school.Count; i++)
+        {
+            schoolCenter += (Vector2)school[i].transform.position;
+
+        }
+        schoolCenter /= school.Count;
+
+        mainCamera.transform.position = new Vector3(schoolCenter.x, schoolCenter.y, -10);
     }
 }

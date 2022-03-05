@@ -52,7 +52,7 @@ public class FishBehaviour : MonoBehaviour
     {
         UpdateFishDistance();
 
-        rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + TempForce() + DirectingForce();
+        rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce();
         if(rb.velocity.magnitude > 0)
         {
             currentDirection = rb.velocity.normalized;
