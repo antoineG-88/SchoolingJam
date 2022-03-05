@@ -5,9 +5,10 @@ using UnityEngine;
 public class SchoolHandler : MonoBehaviour
 {
     public int startNumberOfFish;
+    public int maxNumberOfFish;
+    public bool cameraFollowSchool;
 
     public Camera mainCamera;
-    public FishBehaviour fishPrefab;
     [HideInInspector]
     public List<FishBehaviour> school;
 
@@ -17,26 +18,25 @@ public class SchoolHandler : MonoBehaviour
     public bool isDirecting;
 
     private Vector2 schoolCenter;
+
     private void Start()
     {
         school = new List<FishBehaviour>();
         for (int i = 0; i < startNumberOfFish; i++)
         {
-            FishBehaviour newFish = Instantiate(fishPrefab);
+            FishBehaviour newFish = Instantiate(GameManager.instance.fishPrefab);
             school.Add(newFish);
             newFish.schoolHandler = this;
-        }
-
-        for (int i = 0; i < school.Count; i++)
-        {
-            school[i].Initiate();
+            newFish.isControlled = true;
+            GameManager.allFish.Add(newFish);
         }
     }
 
     private void Update()
     {
         UpdateDirectingForce();
-        //UpdateCameraPosition();
+        if(cameraFollowSchool)
+            UpdateCameraPosition();
     }
 
     private void UpdateDirectingForce()

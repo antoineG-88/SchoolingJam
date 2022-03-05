@@ -15,16 +15,21 @@ public class FishBehaviour : MonoBehaviour
     public float cohesionAwarenessDistance;
     public float alignmentBaseForce;
     public float alignmentAwarenessDistance;
+    public float perturbationBaseForce;
+    public float perturbationTime;
+    public Vector2 perturbationMinMaxTimeInterval;
 
     public Transform display;
 
     [HideInInspector]
     public SchoolHandler schoolHandler;
+    [HideInInspector]
+    public bool isControlled;
 
     private Rigidbody2D rb;
     [HideInInspector]
     public Vector2 currentDirection;
-    private NeighbourFish[] schoolFish;
+    private NeighbourFish[] allFishInfo;
 
     private void Start()
     {
@@ -32,42 +37,48 @@ public class FishBehaviour : MonoBehaviour
         currentDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         currentDirection.Normalize();
 
+        perturbationForce = Vector2.zero;
+        perturbationTimeRemaining = -1;
+        timeBeforeNextPerturbation = Random.Range(perturbationMinMaxTimeInterval.x, perturbationMinMaxTimeInterval.y);
     }
 
     public void Initiate()
     {
-        schoolFish = new NeighbourFish[schoolHandler.school.Count];
-        for (int i = 0; i < schoolFish.Length; i++)
+        allFishInfo = new NeighbourFish[GameManager.allFish.Count];
+        for (int i = 0; i < allFishInfo.Length; i++)
         {
-            schoolFish[i] = new NeighbourFish(schoolHandler.school[i]);
+            allFishInfo[i] = new NeighbourFish(GameManager.allFish[i]);
         }
+    }
 
-        if (schoolHandler.school[0] == this)
-        {
-            display.GetComponent<SpriteRenderer>().color = Color.red;
-        }
+    private void Update()
+    {
+        UpdatePerturbation();
     }
 
     private void FixedUpdate()
     {
-        UpdateFishDistance();
-
-        rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce();
-        if(rb.velocity.magnitude > 0)
+        if(GameManager.fishInitialzed)
         {
-            currentDirection = rb.velocity.normalized;
-        }
+            UpdateFishDistance();
 
-        if (rb.velocity.magnitude >= maxSpeed)
-        {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
-        }
-        else
-        {
-            rb.velocity += currentDirection * baseAccelerationForce * Time.deltaTime;
-        }
+            rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce() + PerturbationForce() + TempForce();
+            if (rb.velocity.magnitude > 0)
+            {
+                currentDirection = rb.velocity.normalized;
+            }
 
-        OrientByMovement();
+            if (rb.velocity.magnitude >= maxSpeed)
+            {
+                rb.velocity = rb.velocity.normalized * maxSpeed;
+            }
+            else
+            {
+                rb.velocity += currentDirection * baseAccelerationForce * Time.deltaTime;
+            }
+
+            OrientByMovement();
+        }
     }
 
     Vector2 directionVector;
@@ -75,14 +86,14 @@ public class FishBehaviour : MonoBehaviour
     private Vector2 SeparationForce()
     {
         separationForce = Vector2.zero;
-        for (int i = 0; i < schoolFish.Length; i++)
+        for (int i = 0; i < allFishInfo.Length; i++)
         {
-            if(schoolFish[i].distance < separationAwarenessDistance && schoolFish[i].distance > 0.1f)
+            if(allFishInfo[i].distance < separationAwarenessDistance && allFishInfo[i].distance > 0.1f)
             {
-                directionVector = transform.position - schoolFish[i].fish.transform.position;
+                directionVector = transform.position - allFishInfo[i].fish.transform.position;
                 directionVector.Normalize();
 
-                separationForce += directionVector * Mathf.Pow(1 - (schoolFish[i].distance / 5), separationForcePower) * separationBaseForce * Time.deltaTime;
+                separationForce += directionVector * Mathf.Pow(1 - (allFishInfo[i].distance / 5), separationForcePower) * separationBaseForce * Time.deltaTime;
             }
         }
 
@@ -97,12 +108,12 @@ public class FishBehaviour : MonoBehaviour
         cohesionForce = Vector2.zero;
         cohesionCenter = Vector2.zero;
         counter = 0;
-        for (int i = 0; i < schoolFish.Length; i++)
+        for (int i = 0; i < allFishInfo.Length; i++)
         {
-            if (schoolFish[i].distance < cohesionAwarenessDistance && schoolFish[i].distance > 0.1f)
+            if (allFishInfo[i].distance < cohesionAwarenessDistance && allFishInfo[i].distance > 0.1f)
             {
                 counter++;
-                cohesionCenter += (Vector2)schoolFish[i].fish.transform.position;
+                cohesionCenter += (Vector2)allFishInfo[i].fish.transform.position;
             }
         }
         cohesionCenter = cohesionCenter / counter;
@@ -110,10 +121,6 @@ public class FishBehaviour : MonoBehaviour
         directionVector = cohesionCenter - (Vector2)transform.position;
         directionVector.Normalize();
         cohesionForce = directionVector * cohesionBaseForce * Time.deltaTime;
-        if(schoolHandler.school[0] == this)
-        {
-            Debug.DrawLine(cohesionCenter, cohesionCenter + Vector2.up * 0.1f, Color.red);
-        }
         return cohesionForce;
     }
 
@@ -124,12 +131,12 @@ public class FishBehaviour : MonoBehaviour
         alignmentForce = Vector2.zero;
         averageAlignment = Vector2.zero;
         counter = 0;
-        for (int i = 0; i < schoolFish.Length; i++)
+        for (int i = 0; i < allFishInfo.Length; i++)
         {
-            if (schoolFish[i].distance < alignmentAwarenessDistance && schoolFish[i].distance > 0.1f)
+            if (allFishInfo[i].distance < alignmentAwarenessDistance && allFishInfo[i].distance > 0.1f)
             {
                 counter++;
-                averageAlignment += schoolFish[i].fish.currentDirection;
+                averageAlignment += allFishInfo[i].fish.currentDirection;
             }
         }
         averageAlignment = averageAlignment / counter;
@@ -145,7 +152,7 @@ public class FishBehaviour : MonoBehaviour
     private Vector2 TempForce()
     {
         tempForce = Vector2.zero;
-        if(transform.position.magnitude > 20)
+        if(transform.position.magnitude > 50)
         {
             tempForce = -transform.position;
             tempForce.Normalize();
@@ -156,17 +163,60 @@ public class FishBehaviour : MonoBehaviour
 
     private Vector2 DirectingForce()
     {
-        directionVector = schoolHandler.directingTarget - (Vector2)transform.position;
-        directionVector.Normalize();
+        if(isControlled)
+        {
+            directionVector = schoolHandler.directingTarget - (Vector2)transform.position;
+            directionVector.Normalize();
 
-        return directionVector * directingBaseForce * Time.deltaTime;
+            return directionVector * directingBaseForce * Time.deltaTime;
+        }
+        else
+        {
+            return Vector2.zero;
+        }
+    }
+
+    private Vector2 PerturbationForce()
+    {
+        return perturbationForce;
+    }
+
+    float timeBeforeNextPerturbation;
+    float perturbationTimeRemaining;
+    Vector2 perturbationForce;
+    public void UpdatePerturbation()
+    {
+        if(timeBeforeNextPerturbation <= 0)
+        {
+            if(perturbationTimeRemaining == -1)
+            {
+                perturbationTimeRemaining = perturbationTime;
+                perturbationForce = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                perturbationForce = perturbationForce.normalized * perturbationBaseForce;
+            }
+
+            if (perturbationTimeRemaining > 0)
+            {
+                perturbationTimeRemaining -= Time.deltaTime;
+            }
+            else
+            {
+                perturbationForce = Vector2.zero;
+                perturbationTimeRemaining = -1;
+                timeBeforeNextPerturbation = Random.Range(perturbationMinMaxTimeInterval.x, perturbationMinMaxTimeInterval.y);
+            }
+        }
+        else
+        {
+            timeBeforeNextPerturbation -= Time.deltaTime;
+        }
     }
 
     private void UpdateFishDistance()
     {
-        for (int i = 0; i < schoolHandler.school.Count; i++)
+        for (int i = 0; i < GameManager.allFish.Count; i++)
         {
-            schoolFish[i].distance = Vector2.Distance(transform.position, schoolHandler.school[i].transform.position);
+            allFishInfo[i].distance = Vector2.Distance(transform.position, GameManager.allFish[i].transform.position);
         }
     }
 
