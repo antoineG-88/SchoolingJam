@@ -6,6 +6,7 @@ public class FishBehaviour : MonoBehaviour
 {
     public float baseAccelerationForce;
     public float maxSpeed;
+    public float maxSpeedInWild;
 
     public float directingBaseForce;
     public float separationBaseForce;
@@ -20,11 +21,20 @@ public class FishBehaviour : MonoBehaviour
     public Vector2 perturbationMinMaxTimeInterval;
 
     public Transform display;
+    public GameObject pickUpEffect;
 
     [HideInInspector]
     public SchoolHandler schoolHandler;
     [HideInInspector]
+    public WildFish wildFishOrigin;
+    [HideInInspector]
     public bool isControlled;
+    [HideInInspector]
+    public bool isBeingPickedUp;
+    [HideInInspector]
+    public bool isAnOriginal;
+    [HideInInspector]
+    public bool isActive;
 
     private Rigidbody2D rb;
     [HideInInspector]
@@ -68,9 +78,9 @@ public class FishBehaviour : MonoBehaviour
                 currentDirection = rb.velocity.normalized;
             }
 
-            if (rb.velocity.magnitude >= maxSpeed)
+            if (rb.velocity.magnitude >= (isControlled ? maxSpeed : maxSpeedInWild))
             {
-                rb.velocity = rb.velocity.normalized * maxSpeed;
+                rb.velocity = rb.velocity.normalized * (isControlled ? maxSpeed : maxSpeedInWild);
             }
             else
             {
@@ -152,7 +162,7 @@ public class FishBehaviour : MonoBehaviour
     private Vector2 TempForce()
     {
         tempForce = Vector2.zero;
-        if(transform.position.magnitude > 50)
+        if(transform.position.magnitude > 80)
         {
             tempForce = -transform.position;
             tempForce.Normalize();
@@ -217,6 +227,10 @@ public class FishBehaviour : MonoBehaviour
         for (int i = 0; i < GameManager.allFish.Count; i++)
         {
             allFishInfo[i].distance = Vector2.Distance(transform.position, GameManager.allFish[i].transform.position);
+            if(isControlled && allFishInfo[i].distance < schoolHandler.pickUpWildFishDistance && !allFishInfo[i].fish.isControlled && !allFishInfo[i].fish.isBeingPickedUp)
+            {
+                schoolHandler.PickWildFish(allFishInfo[i].fish);
+            }
         }
     }
 
@@ -228,6 +242,11 @@ public class FishBehaviour : MonoBehaviour
     private Vector2 GetDirectionFromAngle(float angle)
     {
         return new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+    }
+
+    public void PickUpEffect()
+    {
+        Instantiate(pickUpEffect, transform);
     }
 
     public class NeighbourFish

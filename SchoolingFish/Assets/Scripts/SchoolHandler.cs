@@ -6,7 +6,11 @@ public class SchoolHandler : MonoBehaviour
 {
     public int startNumberOfFish;
     public int maxNumberOfFish;
+    public float pickUpWildFishDistance;
+    public float pickUpDelay;
+
     public bool cameraFollowSchool;
+    public float cameraLerpSpeed;
 
     public Camera mainCamera;
     [HideInInspector]
@@ -16,9 +20,11 @@ public class SchoolHandler : MonoBehaviour
     public Vector2 directingTarget;
     [HideInInspector]
     public bool isDirecting;
+    [HideInInspector]
+    public bool canPickUpWildFish;
 
     private Vector2 schoolCenter;
-
+    private Vector3 cameraTargetPos;
     private void Start()
     {
         school = new List<FishBehaviour>();
@@ -28,15 +34,20 @@ public class SchoolHandler : MonoBehaviour
             school.Add(newFish);
             newFish.schoolHandler = this;
             newFish.isControlled = true;
+            newFish.isAnOriginal = true;
             GameManager.allFish.Add(newFish);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (cameraFollowSchool)
+            UpdateCameraPosition();
     }
 
     private void Update()
     {
         UpdateDirectingForce();
-        if(cameraFollowSchool)
-            UpdateCameraPosition();
     }
 
     private void UpdateDirectingForce()
@@ -52,6 +63,26 @@ public class SchoolHandler : MonoBehaviour
         }
     }
 
+    public void PickWildFish(FishBehaviour wildFish)
+    {
+        if(!wildFish.isBeingPickedUp && !wildFish.isControlled)
+        {
+            wildFish.isBeingPickedUp = true;
+            wildFish.PickUpEffect();
+            StartCoroutine(ConvertionDelay(wildFish));
+        }
+    }
+
+    private IEnumerator ConvertionDelay(FishBehaviour wildFish)
+    {
+        yield return new WaitForSeconds(pickUpDelay);
+        school.Add(wildFish);
+        wildFish.wildFishOrigin.groupOfFish.Remove(wildFish);
+        wildFish.isControlled = true;
+        wildFish.schoolHandler = this;
+        wildFish.isBeingPickedUp = false;
+    }
+
     private void UpdateCameraPosition()
     {
         schoolCenter = Vector2.zero;
@@ -62,6 +93,8 @@ public class SchoolHandler : MonoBehaviour
         }
         schoolCenter /= school.Count;
 
-        mainCamera.transform.position = new Vector3(schoolCenter.x, schoolCenter.y, -10);
+        cameraTargetPos = new Vector3(schoolCenter.x, schoolCenter.y, -10);
+
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraTargetPos, cameraLerpSpeed * Time.fixedDeltaTime);
     }
 }

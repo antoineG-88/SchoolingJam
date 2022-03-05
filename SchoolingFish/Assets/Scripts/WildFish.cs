@@ -17,6 +17,7 @@ public class WildFish : MonoBehaviour
             FishBehaviour newFish = Instantiate(GameManager.instance.fishPrefab, transform.position, Quaternion.identity);
             groupOfFish.Add(newFish);
             newFish.schoolHandler = null;
+            newFish.wildFishOrigin = this;
             newFish.isControlled = false;
             GameManager.allFish.Add(newFish);
         }

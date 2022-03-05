@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2001628992214010581}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.038, y: 0.104, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7742567387032037372}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: aada0bc526192b24fa5ad9be8a28d192, type: 3}
-  m_Color: {r: 1, g: 0.65880984, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -154,23 +154,23 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.3066038, g: 0.98173857, b: 1, a: 0.12156863}
-      key1: {r: 0.06132078, g: 1, b: 0.9674192, a: 0.12156863}
-      key2: {r: 0, g: 0, b: 0, a: 0}
-      key3: {r: 0, g: 0, b: 0, a: 0}
+      key0: {r: 0.20852618, g: 0.6226415, b: 0.6226415, a: 1}
+      key1: {r: 0, g: 0.3301887, b: 0.31945086, a: 0.12156863}
+      key2: {r: 0.06132078, g: 1, b: 0.9674192, a: 0}
+      key3: {r: 0.06132078, g: 1, b: 0.9674192, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 0
+      ctime0: 35659
       ctime1: 65535
-      ctime2: 0
-      ctime3: 0
+      ctime2: 65535
+      ctime3: 65535
       ctime4: 0
       ctime5: 0
       ctime6: 0
       ctime7: 0
-      atime0: 0
+      atime0: 36237
       atime1: 65535
       atime2: 0
       atime3: 0
@@ -236,11 +236,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseAccelerationForce: 3
-  maxSpeed: 7
-  directingBaseForce: 100
-  separationBaseForce: 15
+  maxSpeed: 10
+  maxSpeedInWild: 5
+  directingBaseForce: 40
+  separationBaseForce: 40
   separationForcePower: 1.5
-  separationAwarenessDistance: 2
+  separationAwarenessDistance: 3
   cohesionBaseForce: 20
   cohesionAwarenessDistance: 8
   alignmentBaseForce: 10
@@ -249,8 +250,13 @@ MonoBehaviour:
   perturbationTime: 0.5
   perturbationMinMaxTimeInterval: {x: 2, y: 7}
   display: {fileID: 1354814300711289645}
+  pickUpEffect: {fileID: 3794996603310178770, guid: b827c4588578cb646bdc00a6dc2c4e6c, type: 3}
   schoolHandler: {fileID: 0}
+  wildFishOrigin: {fileID: 0}
   isControlled: 0
+  isBeingPickedUp: 0
+  isAnOriginal: 0
+  isActive: 0
   currentDirection: {x: 0, y: 0}
 --- !u!50 &7742567387032037363
 Rigidbody2D:
