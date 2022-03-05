@@ -124,7 +124,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.2
+  m_Time: 0.1
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.3
@@ -236,14 +236,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseAccelerationForce: 3
-  maxSpeed: 5
-  directingBaseForce: 3
-  separationBaseForce: 20
+  maxSpeed: 10
+  directingBaseForce: 50
+  separationBaseForce: 50
   separationForcePower: 1.5
-  separationAwarenessDistance: 1.5
-  cohesionBaseForce: 10
+  separationAwarenessDistance: 3
+  cohesionBaseForce: 20
   cohesionAwarenessDistance: 5
-  alignmentBaseForce: 5
+  alignmentBaseForce: 30
   alignmentAwarenessDistance: 2
   display: {fileID: 1354814300711289645}
   schoolHandler: {fileID: 0}
