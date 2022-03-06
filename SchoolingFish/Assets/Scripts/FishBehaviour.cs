@@ -39,6 +39,7 @@ public class FishBehaviour : MonoBehaviour
     public Material schoolMaterial;
     public Material wildMaterial;
     public Material shelteredMaterial;
+    public ParticleSystem boostParticle;
 
     [HideInInspector]
     public SchoolHandler schoolHandler;
@@ -343,6 +344,11 @@ public class FishBehaviour : MonoBehaviour
         {
             fish = _fish;
         }
+    }
+
+    public void BoostEffect()
+    {
+        boostParticle.Play();
     }
 
     private void OnDrawGizmosSelected()

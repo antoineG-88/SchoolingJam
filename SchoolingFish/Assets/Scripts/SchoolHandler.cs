@@ -94,6 +94,10 @@ public class SchoolHandler : MonoBehaviour
     {
         boostTimeRemaining = boostTime;
         isBoosted = true;
+        for (int i = 0; i < school.Count; i++)
+        {
+            school[i].BoostEffect();
+        }
     }
 
     private void UpdateBoost()

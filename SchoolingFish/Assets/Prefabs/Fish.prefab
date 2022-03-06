@@ -264,6 +264,7 @@ MonoBehaviour:
   schoolMaterial: {fileID: 2100000, guid: 1bb7e3cb92e888149af63e36c999cf24, type: 2}
   wildMaterial: {fileID: 2100000, guid: 3d5adde9c36943f4f8d3b225265dabda, type: 2}
   shelteredMaterial: {fileID: 2100000, guid: afe0dff14756f814d82523fb1071b64b, type: 2}
+  boostParticle: {fileID: 5223124963465705545}
   schoolHandler: {fileID: 0}
   wildFishOrigin: {fileID: 0}
   isControlled: 0
@@ -365,6 +366,10 @@ PrefabInstance:
       value: Particle System Stars
       objectReference: {fileID: 0}
     - target: {fileID: 4980129470818371185, guid: 72915b3b286ac4a41b95f0e813ac01bb, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4980129470818371185, guid: 72915b3b286ac4a41b95f0e813ac01bb, type: 3}
       propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
@@ -404,10 +409,19 @@ PrefabInstance:
       propertyPath: InitialModule.startSizeZ.minMaxState
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8425585129226532628, guid: 72915b3b286ac4a41b95f0e813ac01bb, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72915b3b286ac4a41b95f0e813ac01bb, type: 3}
 --- !u!4 &1975278118290571128 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1587841981823041856, guid: 72915b3b286ac4a41b95f0e813ac01bb, type: 3}
+  m_PrefabInstance: {fileID: 963978287058288184}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5223124963465705545 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4980129470818371185, guid: 72915b3b286ac4a41b95f0e813ac01bb, type: 3}
   m_PrefabInstance: {fileID: 963978287058288184}
   m_PrefabAsset: {fileID: 0}
