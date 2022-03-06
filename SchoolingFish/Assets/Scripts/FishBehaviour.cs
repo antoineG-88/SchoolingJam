@@ -27,6 +27,10 @@ public class FishBehaviour : MonoBehaviour
     public Vector2 perturbationMinMaxTimeInterval;
     [Header("Shelter")]
     public float shelterBaseForce;
+    [Header("Obstacle Avoidance")]
+    public float avoidBaseForce;
+    public float avoidDetectionRange;
+    public LayerMask obstacleMask;
     [Space]
     public SpriteRenderer display;
     public GameObject pickUpEffect;
@@ -97,7 +101,7 @@ public class FishBehaviour : MonoBehaviour
             {
                 UpdateFishDistance();
 
-                rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce() + PerturbationForce() + MapBoundsForce();
+                rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce() + PerturbationForce() + MapBoundsForce() + AvoidForce();
             }
             else
             {
@@ -265,6 +269,21 @@ public class FishBehaviour : MonoBehaviour
         shelterDirection.Normalize();
         return shelterBaseForce * shelterDirection * Time.fixedDeltaTime;
     }
+
+    Vector2 avoidForce;
+    public Vector2 AvoidForce()
+    {
+        avoidForce = Vector2.zero;
+        RaycastHit2D obstacleHit = Physics2D.Raycast(transform.position, currentDirection, avoidDetectionRange, obstacleMask);
+        if(obstacleHit)
+        {
+            avoidForce = obstacleHit.normal;
+            avoidForce *= avoidBaseForce;
+        }
+
+        return avoidForce;
+    }
+
 
     #endregion
 

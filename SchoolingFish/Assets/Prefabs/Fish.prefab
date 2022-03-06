@@ -251,6 +251,11 @@ MonoBehaviour:
   perturbationTime: 0.5
   perturbationMinMaxTimeInterval: {x: 2, y: 7}
   shelterBaseForce: 15
+  avoidBaseForce: 7
+  avoidDetectionRange: 1
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 64
   display: {fileID: 636942744920985440}
   pickUpEffect: {fileID: 3794996603310178770, guid: b827c4588578cb646bdc00a6dc2c4e6c, type: 3}
   schoolMaterial: {fileID: 2100000, guid: 1bb7e3cb92e888149af63e36c999cf24, type: 2}
