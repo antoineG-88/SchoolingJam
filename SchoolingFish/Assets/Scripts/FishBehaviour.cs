@@ -8,6 +8,8 @@ public class FishBehaviour : MonoBehaviour
     public float baseAccelerationForce;
     public float maxSpeed;
     public float maxSpeedInWild;
+    public float boostedMaxSpeed;
+    public float boostedAcceleration;
     [Space]
     [Header("Forces")]
     public float directingBaseForce;
@@ -118,11 +120,18 @@ public class FishBehaviour : MonoBehaviour
 
             if (rb.velocity.magnitude >= (isControlled ? maxSpeed : maxSpeedInWild))
             {
-                rb.velocity = rb.velocity.normalized * (isControlled ? maxSpeed : maxSpeedInWild);
+                rb.velocity = rb.velocity.normalized * (isControlled ? (schoolHandler.isBoosted ? boostedMaxSpeed : maxSpeed) : maxSpeedInWild);
             }
             else
             {
-                rb.velocity += currentDirection * baseAccelerationForce * Time.fixedDeltaTime;
+                if(isControlled && schoolHandler.isBoosted)
+                {
+                    rb.velocity += currentDirection * boostedAcceleration * Time.fixedDeltaTime;
+                }
+                else
+                {
+                    rb.velocity += currentDirection * baseAccelerationForce * Time.fixedDeltaTime;
+                }
             }
 
             OrientByMovement();

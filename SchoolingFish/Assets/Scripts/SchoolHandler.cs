@@ -8,6 +8,7 @@ public class SchoolHandler : MonoBehaviour
     public int maxNumberOfFish;
     public float pickUpWildFishDistance;
     public float pickUpDelay;
+    public float boostTime;
 
     public bool cameraFollowSchool;
     public float cameraLerpSpeed;
@@ -22,9 +23,12 @@ public class SchoolHandler : MonoBehaviour
     public bool isDirecting;
     [HideInInspector]
     public bool canPickUpWildFish;
+    [HideInInspector]
+    public bool isBoosted;
 
     private Vector2 schoolCenter;
     private Vector3 cameraTargetPos;
+
     private void Start()
     {
         school = new List<FishBehaviour>();
@@ -49,6 +53,7 @@ public class SchoolHandler : MonoBehaviour
     private void Update()
     {
         UpdateDirectingForce();
+        UpdateBoost();
     }
 
     private void UpdateDirectingForce()
@@ -82,6 +87,25 @@ public class SchoolHandler : MonoBehaviour
         wildFish.isControlled = true;
         wildFish.schoolHandler = this;
         wildFish.isBeingPickedUp = false;
+    }
+
+    private float boostTimeRemaining;
+    public void Boost()
+    {
+        boostTimeRemaining = boostTime;
+        isBoosted = true;
+    }
+
+    private void UpdateBoost()
+    {
+        if(boostTimeRemaining > 0)
+        {
+            boostTimeRemaining -= Time.deltaTime;
+        }
+        else if(isBoosted)
+        {
+            isBoosted = false;
+        }
     }
 
     private void UpdateCameraPosition()
