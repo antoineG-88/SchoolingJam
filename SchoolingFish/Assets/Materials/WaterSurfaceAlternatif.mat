@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterSurface
-  m_Shader: {fileID: -6465566751694194690, guid: 6d38f7249f3c096479250aed0c50d36e, type: 3}
+  m_Name: WaterSurfaceAlternatif
+  m_Shader: {fileID: -6465566751694194690, guid: 3558c9810a99df44aadf34f28f05cbc5, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -105,8 +105,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_6ce145b547b8427686024349392373a9: 0.085
-    - Vector1_e2c5e4e1b77d4ad0a8acbf6a60188c1a: 0.01
+    - Vector1_6ce145b547b8427686024349392373a9: 0.328
+    - Vector1_e2c5e4e1b77d4ad0a8acbf6a60188c1a: 0.0039
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -134,9 +134,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_3b8f09b62fc34f5eae4f5b1bd80434a2: {r: 0.7311321, g: 1, b: 0.94798565, a: 1}
-    - Color_60d790827d3848a59ab8bf3fbfca432c: {r: 0.7971698, g: 1, b: 0.95536107, a: 1}
-    - Color_910e8083fd23479d853f40895a16140f: {r: 0, g: 0.3973062, b: 0.5568628, a: 1}
+    - Color_3b8f09b62fc34f5eae4f5b1bd80434a2: {r: 0.3803922, g: 1, b: 0.83055204, a: 1}
+    - Color_60d790827d3848a59ab8bf3fbfca432c: {r: 0.39999998, g: 1, b: 0.98039216, a: 0.3176471}
+    - Color_910e8083fd23479d853f40895a16140f: {r: 0, g: 0.3921736, b: 0.5568628, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

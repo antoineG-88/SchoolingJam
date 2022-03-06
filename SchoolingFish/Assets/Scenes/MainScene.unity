@@ -850,7 +850,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a02509f395be9d346a3a098fdf566059, type: 2}
+  - {fileID: 2100000, guid: bd6516412f32cb94b8c1d124c092bc12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1455,6 +1455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b23357e06561a4b9936c4988bc1fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapRadius: 150
   fishPrefab: {fileID: 7742567387032037374, guid: 383d2064c3ab52040aaf85977f31995a, type: 3}
 --- !u!4 &1952481675
 Transform:
