@@ -4,24 +4,35 @@ using UnityEngine;
 
 public class FishBehaviour : MonoBehaviour
 {
+    [Header("General")]
     public float baseAccelerationForce;
     public float maxSpeed;
     public float maxSpeedInWild;
-
+    [Space]
+    [Header("Forces")]
     public float directingBaseForce;
+    [Header("Separation")]
     public float separationBaseForce;
     public float separationForcePower;
     public float separationAwarenessDistance;
+    [Header("Cohesion")]
     public float cohesionBaseForce;
     public float cohesionAwarenessDistance;
+    [Header("Alignment")]
     public float alignmentBaseForce;
     public float alignmentAwarenessDistance;
+    [Header("Perturbation")]
     public float perturbationBaseForce;
     public float perturbationTime;
     public Vector2 perturbationMinMaxTimeInterval;
-
-    public Transform display;
+    [Header("Shelter")]
+    public float shelterBaseForce;
+    [Space]
+    public SpriteRenderer display;
     public GameObject pickUpEffect;
+    public Material schoolMaterial;
+    public Material wildMaterial;
+    public Material shelteredMaterial;
 
     [HideInInspector]
     public SchoolHandler schoolHandler;
@@ -34,12 +45,13 @@ public class FishBehaviour : MonoBehaviour
     [HideInInspector]
     public bool isAnOriginal;
     [HideInInspector]
-    public bool isActive;
+    public bool isInShelter;
 
     private Rigidbody2D rb;
     [HideInInspector]
     public Vector2 currentDirection;
     private NeighbourFish[] allFishInfo;
+    public CoralShelter currentShelter;
 
     private void Start()
     {
@@ -54,10 +66,21 @@ public class FishBehaviour : MonoBehaviour
 
     public void Initiate()
     {
-        allFishInfo = new NeighbourFish[GameManager.allFish.Count];
-        for (int i = 0; i < allFishInfo.Length; i++)
+        if(!isInShelter)
         {
-            allFishInfo[i] = new NeighbourFish(GameManager.allFish[i]);
+            allFishInfo = new NeighbourFish[GameManager.allFish.Count];
+            for (int i = 0; i < allFishInfo.Length; i++)
+            {
+                allFishInfo[i] = new NeighbourFish(GameManager.allFish[i]);
+            }
+        }
+        else
+        {
+            allFishInfo = new NeighbourFish[currentShelter.allShelterFish.Count];
+            for (int i = 0; i < allFishInfo.Length; i++)
+            {
+                allFishInfo[i] = new NeighbourFish(currentShelter.allShelterFish[i]);
+            }
         }
     }
 
@@ -70,9 +93,20 @@ public class FishBehaviour : MonoBehaviour
     {
         if(GameManager.fishInitialzed)
         {
-            UpdateFishDistance();
+            if(!isInShelter)
+            {
+                UpdateFishDistance();
 
-            rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce() + PerturbationForce() + TempForce();
+                rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce() + PerturbationForce() + TempForce();
+            }
+            else
+            {
+                UpdateFishDistance();
+
+                rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + ShelterForce();
+
+            }
+
             if (rb.velocity.magnitude > 0)
             {
                 currentDirection = rb.velocity.normalized;
@@ -84,13 +118,15 @@ public class FishBehaviour : MonoBehaviour
             }
             else
             {
-                rb.velocity += currentDirection * baseAccelerationForce * Time.deltaTime;
+                rb.velocity += currentDirection * baseAccelerationForce * Time.fixedDeltaTime;
             }
 
             OrientByMovement();
         }
     }
 
+
+    #region Forces
     Vector2 directionVector;
     Vector2 separationForce;
     private Vector2 SeparationForce()
@@ -98,7 +134,7 @@ public class FishBehaviour : MonoBehaviour
         separationForce = Vector2.zero;
         for (int i = 0; i < allFishInfo.Length; i++)
         {
-            if(allFishInfo[i].distance < separationAwarenessDistance && allFishInfo[i].distance > 0.1f)
+            if(allFishInfo[i].distance < separationAwarenessDistance)
             {
                 directionVector = transform.position - allFishInfo[i].fish.transform.position;
                 directionVector.Normalize();
@@ -120,7 +156,7 @@ public class FishBehaviour : MonoBehaviour
         counter = 0;
         for (int i = 0; i < allFishInfo.Length; i++)
         {
-            if (allFishInfo[i].distance < cohesionAwarenessDistance && allFishInfo[i].distance > 0.1f)
+            if (allFishInfo[i].distance < cohesionAwarenessDistance)
             {
                 counter++;
                 cohesionCenter += (Vector2)allFishInfo[i].fish.transform.position;
@@ -143,7 +179,7 @@ public class FishBehaviour : MonoBehaviour
         counter = 0;
         for (int i = 0; i < allFishInfo.Length; i++)
         {
-            if (allFishInfo[i].distance < alignmentAwarenessDistance && allFishInfo[i].distance > 0.1f)
+            if (allFishInfo[i].distance < alignmentAwarenessDistance)
             {
                 counter++;
                 averageAlignment += allFishInfo[i].fish.currentDirection;
@@ -222,12 +258,22 @@ public class FishBehaviour : MonoBehaviour
         }
     }
 
+    Vector2 shelterDirection;
+    public Vector2 ShelterForce()
+    {
+        shelterDirection = currentShelter.shelterCenter - (Vector2)transform.position;
+        shelterDirection.Normalize();
+        return shelterBaseForce * shelterDirection * Time.fixedDeltaTime;
+    }
+
+    #endregion
+
     private void UpdateFishDistance()
     {
-        for (int i = 0; i < GameManager.allFish.Count; i++)
+        for (int i = 0; i < allFishInfo.Length; i++)
         {
-            allFishInfo[i].distance = Vector2.Distance(transform.position, GameManager.allFish[i].transform.position);
-            if(isControlled && allFishInfo[i].distance < schoolHandler.pickUpWildFishDistance && !allFishInfo[i].fish.isControlled && !allFishInfo[i].fish.isBeingPickedUp)
+            allFishInfo[i].distance = Vector2.Distance(transform.position, allFishInfo[i].fish.transform.position);
+            if(isControlled && allFishInfo[i].distance < schoolHandler.pickUpWildFishDistance && !allFishInfo[i].fish.isControlled && !allFishInfo[i].fish.isBeingPickedUp && !allFishInfo[i].fish.isInShelter)
             {
                 schoolHandler.PickWildFish(allFishInfo[i].fish);
             }
@@ -236,7 +282,7 @@ public class FishBehaviour : MonoBehaviour
 
     private void OrientByMovement()
     {
-        display.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, currentDirection));
+        display.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, currentDirection));
     }
 
     private Vector2 GetDirectionFromAngle(float angle)
@@ -247,6 +293,17 @@ public class FishBehaviour : MonoBehaviour
     public void PickUpEffect()
     {
         Instantiate(pickUpEffect, transform);
+        display.sharedMaterial = schoolMaterial;
+    }
+
+    public void SetShelter(CoralShelter shelter)
+    {
+        isInShelter = true;
+        currentShelter = shelter;
+        GameManager.allFish.Remove(this);
+        schoolHandler.school.Remove(this);
+        isControlled = false;
+        display.sharedMaterial = shelteredMaterial;
     }
 
     public class NeighbourFish
@@ -264,5 +321,7 @@ public class FishBehaviour : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, separationAwarenessDistance);
+        Gizmos.DrawWireSphere(transform.position, alignmentAwarenessDistance);
+        Gizmos.DrawWireSphere(transform.position, cohesionAwarenessDistance);
     }
 }

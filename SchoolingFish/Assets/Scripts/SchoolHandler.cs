@@ -36,6 +36,7 @@ public class SchoolHandler : MonoBehaviour
             newFish.isControlled = true;
             newFish.isAnOriginal = true;
             GameManager.allFish.Add(newFish);
+            newFish.PickUpEffect();
         }
     }
 
@@ -77,7 +78,7 @@ public class SchoolHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(pickUpDelay);
         school.Add(wildFish);
-        wildFish.wildFishOrigin.groupOfFish.Remove(wildFish);
+        //wildFish.wildFishOrigin.groupOfFish.Remove(wildFish);
         wildFish.isControlled = true;
         wildFish.schoolHandler = this;
         wildFish.isBeingPickedUp = false;

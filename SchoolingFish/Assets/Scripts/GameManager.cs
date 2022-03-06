@@ -22,10 +22,15 @@ public class GameManager : MonoBehaviour
         if(!fishInitialzed)
         {
             fishInitialzed = true;
-            for (int i = 0; i < allFish.Count; i++)
-            {
-                allFish[i].Initiate();
-            }
+            InitAllFish();
+        }
+    }
+
+    static public void InitAllFish()
+    {
+        for (int i = 0; i < allFish.Count; i++)
+        {
+            allFish[i].Initiate();
         }
     }
 }

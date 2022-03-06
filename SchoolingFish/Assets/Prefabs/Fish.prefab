@@ -124,7 +124,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.1
+  m_Time: 0.15
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.3
@@ -154,8 +154,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.20852618, g: 0.6226415, b: 0.6226415, a: 1}
-      key1: {r: 0, g: 0.3301887, b: 0.31945086, a: 0.12156863}
+      key0: {r: 0.7264151, g: 0.39447427, b: 0.29810432, a: 1}
+      key1: {r: 0.7254902, g: 0.39607847, b: 0.29803923, a: 0.12156863}
       key2: {r: 0.06132078, g: 1, b: 0.9674192, a: 0}
       key3: {r: 0.06132078, g: 1, b: 0.9674192, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -187,7 +187,7 @@ TrailRenderer:
     textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.02
   m_Autodestruct: 0
   m_Emitting: 1
 --- !u!1 &7742567387032037375
@@ -201,6 +201,7 @@ GameObject:
   - component: {fileID: 7742567387032037372}
   - component: {fileID: 7742567387032037374}
   - component: {fileID: 7742567387032037363}
+  - component: {fileID: 8346182753546063497}
   m_Layer: 0
   m_Name: Fish
   m_TagString: Untagged
@@ -238,26 +239,31 @@ MonoBehaviour:
   baseAccelerationForce: 3
   maxSpeed: 10
   maxSpeedInWild: 5
-  directingBaseForce: 40
-  separationBaseForce: 40
-  separationForcePower: 1.5
-  separationAwarenessDistance: 3
+  directingBaseForce: 25
+  separationBaseForce: 20
+  separationForcePower: 0.5
+  separationAwarenessDistance: 2
   cohesionBaseForce: 20
-  cohesionAwarenessDistance: 8
+  cohesionAwarenessDistance: 5
   alignmentBaseForce: 10
-  alignmentAwarenessDistance: 7
+  alignmentAwarenessDistance: 4
   perturbationBaseForce: 0.5
   perturbationTime: 0.5
   perturbationMinMaxTimeInterval: {x: 2, y: 7}
-  display: {fileID: 1354814300711289645}
+  shelterBaseForce: 15
+  display: {fileID: 636942744920985440}
   pickUpEffect: {fileID: 3794996603310178770, guid: b827c4588578cb646bdc00a6dc2c4e6c, type: 3}
+  schoolMaterial: {fileID: 2100000, guid: 1bb7e3cb92e888149af63e36c999cf24, type: 2}
+  wildMaterial: {fileID: 2100000, guid: 3d5adde9c36943f4f8d3b225265dabda, type: 2}
+  shelteredMaterial: {fileID: 2100000, guid: afe0dff14756f814d82523fb1071b64b, type: 2}
   schoolHandler: {fileID: 0}
   wildFishOrigin: {fileID: 0}
   isControlled: 0
   isBeingPickedUp: 0
   isAnOriginal: 0
-  isActive: 0
+  isInShelter: 0
   currentDirection: {x: 0, y: 0}
+  currentShelter: {fileID: 0}
 --- !u!50 &7742567387032037363
 Rigidbody2D:
   serializedVersion: 4
@@ -279,3 +285,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &8346182753546063497
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7742567387032037375}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4
