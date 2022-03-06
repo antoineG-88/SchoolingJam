@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public float mapRadius;
     public FishBehaviour fishPrefab;
     [HideInInspector]
     static public List<FishBehaviour> allFish;
@@ -32,5 +33,10 @@ public class GameManager : MonoBehaviour
         {
             allFish[i].Initiate();
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(Vector2.zero, mapRadius);
     }
 }

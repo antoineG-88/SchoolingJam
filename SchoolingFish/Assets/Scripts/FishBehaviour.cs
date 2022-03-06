@@ -97,7 +97,7 @@ public class FishBehaviour : MonoBehaviour
             {
                 UpdateFishDistance();
 
-                rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce() + PerturbationForce() + TempForce();
+                rb.velocity += SeparationForce() + CohesionForce() + AlignmentForce() + DirectingForce() + PerturbationForce() + MapBoundsForce();
             }
             else
             {
@@ -194,17 +194,17 @@ public class FishBehaviour : MonoBehaviour
         return alignmentForce;
     }
 
-    Vector2 tempForce;
-    private Vector2 TempForce()
+    Vector2 mapBoundsForce;
+    private Vector2 MapBoundsForce()
     {
-        tempForce = Vector2.zero;
-        if(transform.position.magnitude > 80)
+        mapBoundsForce = Vector2.zero;
+        if(transform.position.magnitude > GameManager.instance.mapRadius)
         {
-            tempForce = -transform.position;
-            tempForce.Normalize();
-            tempForce *= 2;
+            mapBoundsForce = -transform.position;
+            mapBoundsForce.Normalize();
+            mapBoundsForce *= 2;
         }
-        return tempForce;
+        return mapBoundsForce;
     }
 
     private Vector2 DirectingForce()
