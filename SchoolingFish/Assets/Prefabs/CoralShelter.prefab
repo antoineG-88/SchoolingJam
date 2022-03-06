@@ -313,6 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxFishCapacity: 70
   numberText: {fileID: 2832731883831282970}
+  joinEffect: {fileID: 235643816554539624, guid: 6667ab36c57d3ce4cbf92f9a6473c3b3, type: 3}
   shelterCenter: {x: 0, y: 0}
   allShelterFish: []
 --- !u!58 &4278268516654175643

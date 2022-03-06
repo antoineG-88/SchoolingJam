@@ -6,6 +6,7 @@ public class CoralShelter : MonoBehaviour
 {
     public int maxFishCapacity;
     public TextMesh numberText;
+    public GameObject joinEffect;
 
     [HideInInspector]
     public Vector2 shelterCenter;
@@ -32,6 +33,7 @@ public class CoralShelter : MonoBehaviour
             if (potentialFish != null && potentialFish.isControlled && !potentialFish.isAnOriginal)
             {
                 potentialFish.SetShelter(this);
+                Instantiate(joinEffect, transform.position, Quaternion.identity);
                 allShelterFish.Add(potentialFish);
                 GameManager.InitAllFish();
             }

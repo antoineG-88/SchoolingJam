@@ -30,15 +30,16 @@ public class Booster : MonoBehaviour
 
     private void Appear()
     {
-        //baseParticle.Play();
+        baseParticle.Play();
         isActive = true;
     }
 
     private void Boost()
     {
-        //baseParticle.Stop();
+        baseParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         isActive = false;
-        //boostParticle.Play();
+        boostParticle.Play();
+        timeBeforeRepawn = respawnTime;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
